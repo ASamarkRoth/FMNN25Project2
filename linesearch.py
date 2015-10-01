@@ -11,7 +11,7 @@ def gp(x):
 
 def line_search(f, x0, tol = 1e-5):
     # dichotomus line search
-    eps = tol/10
+    eps = min(1e-8, tol/10)
     a = x0
     b = x0 + 1
     f1 = f(a)

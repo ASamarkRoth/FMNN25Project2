@@ -62,16 +62,6 @@ class OptimizationMethods:
         gk = self.g.copy()
         Gk = _initial_hessian(gk, xk)
         while True:
-<<<<<<< HEAD
-            gk = OptimizationProblem.get_gradient(fk,x0)
-            Hk = self.hessian(gk,fk,x0)
-            sk = np.dot(inv(Hk),gk)
-            #Perhaps the two rows above should be one method, newton_direction
-            alphak = self.line_search(fk, xk, tol = 1e-5)
-            self.xk = self.xk + alphak
-            Hk = self.hessian()
-            if sl.norm(np.dot(alphak,sk)) < self.tol:
-=======
             sk = _newton_direction(Gk, gk)   
             if par_line == "exact": 
                 alphak = self._line_search(fk, xk, tol = 1e-5, "exact")
@@ -82,7 +72,6 @@ class OptimizationMethods:
             xk = xk + alphak*sk
             Gk = _update_hessian(Gk, self.xk)
             if sl.norm(alphak*sk) < self.tol:
->>>>>>> ba9abded135726b9452d6048504c698b6869fb7f
                 x = xk
                 fmin = f(xk)
                 break
@@ -145,7 +134,6 @@ H = J(g)'''
 class OriginalNewton(OptimizationMethods):
     
     def _newton_direction(gk,Gk):
-        
         Gk = 0.5*(G+G.T)
         try:
             L = sl.cho_factor(Gk)
@@ -153,8 +141,8 @@ class OriginalNewton(OptimizationMethods):
             print("The computed Hessian was not positive definite!")
         sk = sl.cho_solve(L,gk)
     
-    
-        
+    def _update_hessian(G, xk, *args, **kwargs)
+        return G(xk)
         
     
 =======

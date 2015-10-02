@@ -4,28 +4,8 @@
 import numpy as np
 import scipy.linalg as sl
 import abc #abstract base classes
-<<<<<<< HEAD
+from linesearh import *
 
-'''Suggestion of how to compute grid for computation of g, perhaps also H?
-Options: Create grid from the start which we use throughout whole optimisation or 
-everytime we compute gk and Hk we compute new grid? Isn't it necessary to introduce a new grid everytime to assure
-that xk+1 exists in the grid? '''
-
-xk = np.array([3,4])
-step =  0.001
-nbr_points = 5
-bounds = [((xk[j]-step*(nbr_points//2)),xk[j]+1.1*step*(nbr_points//2)) for j in range(len(xk))]
-gridk = np.mgrid[[slice(bounds[j][0], bounds[j][1], step) for j in range(len(xk))]]
-
-f = gridk[0]** + gridk[1]*2
-g,dx = np.gradient(f)
-
-#%% 
-'''Design suggestion'''
-
-=======
- 
->>>>>>> ba9abded135726b9452d6048504c698b6869fb7f
 class OptimizationProblem:
     '''A class which generates the necessary components to handle and solve an
     optimization problem defined by an input function f'''
@@ -61,12 +41,12 @@ class OptimizationMethods:
         fk = self.f.copy()
         gk = self.g.copy()
         Gk = _initial_hessian(gk, xk)
-        line_search = _get_line_search(fk, xk, tol = 1e-5, self.par_line_search)       
+        line_search = _get_line_search(fk, xk, tol, self.par_line_search)       
         while True:
             sk = _newton_direction(Gk, gk)  
             alphak = line_search(fk, xk, tol = 1e-5)
             xk = xk + alphak*sk
-            Gk = _update_hessian(Gk, self.xk)
+            Gk = _update_hessian(Gk, xk)
             if sl.norm(alphak*sk) < self.tol:
                 x = xk
                 fmin = f(xk)
@@ -77,23 +57,28 @@ class OptimizationMethods:
         '''Computes sk'''
         return (-1)*np.linalg.solve(Gk, gk)
     
-    def _get_line_search(fk, xk, tol = 1e-5, par_line_search = "exact"):
+    def _get_line_search(fk, xk, tol = 1e-5, par_line_search):
         '''Performs a line_search, finds the alpha which minimizes f(xk+alpha*sk)'''
-        
         if par_line_search == "exact":
             def line_search(fk, xk, tol = 1e-5):
-                return exact_line_search(fk, xk, tol = 1e-5)
+                return _exact_line_search(fk, xk, tol = 1e-5)
             return line_search
-            
         elif par_line_search == "inexact":
             def line_search(fk, xk, tol = 1e-5):
-                return inexact_line_search(fk, xk, tol = 1e-5)
+                return _inexact_line_search(fk, xk, tol = 1e-5)
             return line_search
-        
         else:
             def line_search(fk, xk, tol = 1e-5):
                 return 1
             return line_search
+        
+    def _exact_line_search(fk, xk, tol = 1e-5):
+        return line_search(fk, xk, tol)
+    
+    def _inexact_line_search(fk, xk, tol = 1e-5):
+        fp = np.dot(xk, xk) # detta borde vara ok 
+        alpha_0 = 1: # detta är nog inte rätt
+        return inexact_line_search(f, fp, alpha_0, tol)
         
     @abc.abstractmethod
     def _initial_hessian():

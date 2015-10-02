@@ -29,25 +29,21 @@ class OptimizationProblem:
 class OptimizationMethods:
     __metaclass__ = abc.ABCMeta
     
-    def __init__(self, OptimizationProblem, par_line = "exact"):
+    def __init__(self, OptimizationProblem, par_line_search = "exact"):
         self.f = OptimizationProblem.f
         self.x0 = OptimizationProblem.x0
         self.g = OptimizationProblem.g
-        self.par_line = par_line 
+        self.par_line_search = par_line_search 
     
     def newton_procedure():
         xk = self.x0.copy()
         fk = self.f.copy()
         gk = self.g.copy()
         Gk = _initial_hessian(gk, xk)
+        line_search = _get_line_search(fk, xk, tol = 1e-5, self.par_line_search)       
         while True:
-            sk = _newton_direction(Gk, gk)   
-            if par_line == "exact": 
-                alphak = self._line_search(fk, xk, tol = 1e-5, "exact")
-            elif par_line == "inexact":
-                alphak = self._line_search(fk, xk, tol = 1e-5, "inexact")
-            else:
-                alphak = 1
+            sk = _newton_direction(Gk, gk)  
+            alphak = line_search(fk, xk, tol = 1e-5)
             xk = xk + alphak*sk
             Gk = _update_hessian(Gk, self.xk)
             if sl.norm(alphak*sk) < self.tol:
@@ -58,7 +54,25 @@ class OptimizationMethods:
         
     def _newton_direction(Gk, gk):
         '''Computes sk'''
-        return (-1)*np.np.linalg.solve(Gk, gk)
+        return (-1)*np.linalg.solve(Gk, gk)
+    
+    def _get_line_search(fk, xk, tol = 1e-5, par_line_search = "exact"):
+        '''Performs a line_search, finds the alpha which minimizes f(xk+alpha*sk)'''
+        
+        if par_line_search == "exact":
+            def line_search(fk, xk, tol = 1e-5):
+                return exact_line_search(fk, xk, tol = 1e-5)
+            return line_search
+            
+        elif par_line_search == "inexact":
+            def line_search(fk, xk, tol = 1e-5):
+                return inexact_line_search(fk, xk, tol = 1e-5)
+            return line_search
+        
+        else:
+            def line_search(fk, xk, tol = 1e-5):
+                return 1
+            return line_search
         
     @abc.abstractmethod
     def _initial_hessian():
@@ -70,10 +84,6 @@ class OptimizationMethods:
             Updates the hessian
         '''
     
-    @abc.abstractmethod
-    def _line_search():
-        '''Performs a line_search, finds the alpha which minimizes f(xk+alpha*sk)'''
-
 
 #%%Testing abstract stuff
 class Newton:

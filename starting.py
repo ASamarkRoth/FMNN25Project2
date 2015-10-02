@@ -44,7 +44,7 @@ class OptimizationMethods:
         line_search = _get_line_search(fk, xk, tol, self.par_line_search)       
         while True:
             sk = _newton_direction(Gk, gk)  
-            alphak = line_search(fk, xk, tol = 1e-5)
+            alphak = line_search(fk, xk, gk, tol = 1e-5)
             xk = xk + alphak*sk
             Gk = _update_hessian(Gk, xk)
             if sl.norm(alphak*sk) < self.tol:
@@ -60,24 +60,24 @@ class OptimizationMethods:
     def _get_line_search(fk, xk, tol = 1e-5, par_line_search):
         '''Performs a line_search, finds the alpha which minimizes f(xk+alpha*sk)'''
         if par_line_search == "exact":
-            def line_search(fk, xk, tol = 1e-5):
-                return _exact_line_search(fk, xk, tol = 1e-5)
+            def line_search(fk, xk, gk, tol = 1e-5):
+                return _exact_line_search(fk, xk, gk, tol = 1e-5)
             return line_search
         elif par_line_search == "inexact":
             def line_search(fk, xk, tol = 1e-5):
-                return _inexact_line_search(fk, xk, tol = 1e-5)
+                return _inexact_line_search(fk, xk, gk, tol = 1e-5)
             return line_search
         else:
             def line_search(fk, xk, tol = 1e-5):
                 return 1
             return line_search
         
-    def _exact_line_search(fk, xk, tol = 1e-5):
+    def _exact_line_search(fk, xk, gk, tol = 1e-5):
         return line_search(fk, xk, tol)
     
-    def _inexact_line_search(fk, xk, tol = 1e-5):
-        fp = np.dot(xk, xk) # detta borde vara ok 
-        alpha_0 = 1: # detta är nog inte rätt
+    def _inexact_line_search(fk, xk, gk, tol = 1e-5):
+        fp = np.dot(xk, gk) # detta borde vara ok 
+        alpha_0 = 1 # detta är nog inte rätt
         return inexact_line_search(f, fp, alpha_0, tol)
         
     @abc.abstractmethod

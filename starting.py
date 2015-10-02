@@ -11,6 +11,7 @@ that xk+1 exists in the grid? '''
 
 xk = np.array([3,4])
 step =  0.001
+nbr_points = 5
 bounds = [((xk[j]-step*(nbr_points//2)),xk[j]+1.1*step*(nbr_points//2)) for j in range(len(xk))]
 gridk = np.mgrid[[slice(bounds[j][0], bounds[j][1], step) for j in range(len(xk))]]
 
@@ -60,6 +61,7 @@ class OptimizationMethods:
             #Perhaps the two rows above should be one method, newton_direction
             alphak = self.line_search(fk, xk, tol = 1e-5)
             self.xk = self.xk + alphak
+            Hk = self.hessian()
             if sl.norm(np.dot(alphak,sk)) < self.tol:
                 x = xk
                 fmin = f(xk)
@@ -96,3 +98,35 @@ class Newton2(Newton):
     
     def get_new_x(self,k):
         return self.x0+k
+        
+#%%
+'''Cholesky on Hinv*gk = sk? or positive definiteness of H'''
+A = np.array([[1,2,3],[4,5,6],[7,8,9]])
+#L = sl.cho_factor(A)
+try:
+    L = sl.cho_factor(A)
+except sl.LinAlgError:
+        raise "The computed Hessian is not positive definite"
+gk = np.array([3,3,3])
+sk = sl.cho_solve(L,gk)
+
+'''Cholesky decomposition, A = LL*, if unique --> A positive definite
+H = J(g)'''
+
+#%%
+
+class OriginalNewton(OptimizationMethods):
+    
+    def _newton_direction(gk,Gk):
+        
+        Gk = 0.5*(G+G.T)
+        try:
+            L = sl.cho_factor(Gk)
+        except sl.LinAlgError:
+            print("The computed Hessian was not positive definite!")
+        sk = sl.cho_solve(L,gk)
+    
+    
+        
+        
+    

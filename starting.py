@@ -4,7 +4,28 @@
 import numpy as np
 import scipy.linalg as sl
 import abc #abstract base classes
+<<<<<<< HEAD
+
+'''Suggestion of how to compute grid for computation of g, perhaps also H?
+Options: Create grid from the start which we use throughout whole optimisation or 
+everytime we compute gk and Hk we compute new grid? Isn't it necessary to introduce a new grid everytime to assure
+that xk+1 exists in the grid? '''
+
+xk = np.array([3,4])
+step =  0.001
+nbr_points = 5
+bounds = [((xk[j]-step*(nbr_points//2)),xk[j]+1.1*step*(nbr_points//2)) for j in range(len(xk))]
+gridk = np.mgrid[[slice(bounds[j][0], bounds[j][1], step) for j in range(len(xk))]]
+
+f = gridk[0]** + gridk[1]*2
+g,dx = np.gradient(f)
+
+#%% 
+'''Design suggestion'''
+
+=======
  
+>>>>>>> ba9abded135726b9452d6048504c698b6869fb7f
 class OptimizationProblem:
     '''A class which generates the necessary components to handle and solve an
     optimization problem defined by an input function f'''
@@ -102,6 +123,39 @@ class Newton2(Newton):
     
     def get_new_x(self,k):
         return self.x0+k
+<<<<<<< HEAD
+        
+#%%
+'''Cholesky on Hinv*gk = sk? or positive definiteness of H'''
+A = np.array([[1,2,3],[4,5,6],[7,8,9]])
+#L = sl.cho_factor(A)
+try:
+    L = sl.cho_factor(A)
+except sl.LinAlgError:
+        raise "The computed Hessian is not positive definite"
+gk = np.array([3,3,3])
+sk = sl.cho_solve(L,gk)
+
+'''Cholesky decomposition, A = LL*, if unique --> A positive definite
+H = J(g)'''
+
+#%%
+
+class OriginalNewton(OptimizationMethods):
+    
+    def _newton_direction(gk,Gk):
+        Gk = 0.5*(G+G.T)
+        try:
+            L = sl.cho_factor(Gk)
+        except sl.LinAlgError:
+            print("The computed Hessian was not positive definite!")
+        sk = sl.cho_solve(L,gk)
+    
+    def _update_hessian(G, xk, *args, **kwargs)
+        return G(xk)
+        
+    
+=======
 #%%
 '''Suggestion of how to compute grid for computation of g, perhaps also H?
 Options: Create grid from the start which we use throughout whole optimisation or 
@@ -115,3 +169,4 @@ gridk = np.mgrid[[slice(bounds[j][0], bounds[j][1], step) for j in range(len(xk)
 
 f = gridk[0]** + gridk[1]*2
 g,dx = np.gradient(f)
+>>>>>>> ba9abded135726b9452d6048504c698b6869fb7f

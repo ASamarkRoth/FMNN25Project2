@@ -4,6 +4,7 @@
 import numpy as np
 import scipy.linalg as sl
 import abc #abstract base classes
+from gradhess import *
 <<<<<<< HEAD
 
 '''Suggestion of how to compute grid for computation of g, perhaps also H?
@@ -96,6 +97,39 @@ class OptimizationMethods:
         '''Performs a line_search, finds the alpha which minimizes f(xk+alpha*sk)'''
 
 
+class OriginalNewton(OptimizationMethods):
+    
+    def _newton_direction(gk,Gk):
+        Gk = 0.5*(G+G.T)
+        try:
+            L = sl.cho_factor(Gk)
+        except sl.LinAlgError:
+            print("The computed Hessian was not positive definite!")
+        sk = sl.cho_solve(L,gk)
+    
+    def _update_hessian(G, xk, *args, **kwargs)
+        return G(xk)
+        
+    def _initial_hessian(gk,xk):
+        G = get_hessian(gk)
+        return(G(xk))
+    
+=======
+#%%
+'''Suggestion of how to compute grid for computation of g, perhaps also H?
+Options: Create grid from the start which we use throughout whole optimisation or 
+everytime we compute gk and Hk we compute new grid? Isn't it necessary to introduce a new grid everytime to assure
+that xk+1 exists in the grid? '''
+
+xk = np.array([3,4])
+step =  0.001
+bounds = [((xk[j]-step*(nbr_points//2)),xk[j]+1.1*step*(nbr_points//2)) for j in range(len(xk))]
+gridk = np.mgrid[[slice(bounds[j][0], bounds[j][1], step) for j in range(len(xk))]]
+
+f = gridk[0]** + gridk[1]*2
+g,dx = np.gradient(f)
+
+
 #%%Testing abstract stuff
 class Newton:
     
@@ -131,32 +165,4 @@ H = J(g)'''
 
 #%%
 
-class OriginalNewton(OptimizationMethods):
-    
-    def _newton_direction(gk,Gk):
-        Gk = 0.5*(G+G.T)
-        try:
-            L = sl.cho_factor(Gk)
-        except sl.LinAlgError:
-            print("The computed Hessian was not positive definite!")
-        sk = sl.cho_solve(L,gk)
-    
-    def _update_hessian(G, xk, *args, **kwargs)
-        return G(xk)
-        
-    
-=======
-#%%
-'''Suggestion of how to compute grid for computation of g, perhaps also H?
-Options: Create grid from the start which we use throughout whole optimisation or 
-everytime we compute gk and Hk we compute new grid? Isn't it necessary to introduce a new grid everytime to assure
-that xk+1 exists in the grid? '''
-
-xk = np.array([3,4])
-step =  0.001
-bounds = [((xk[j]-step*(nbr_points//2)),xk[j]+1.1*step*(nbr_points//2)) for j in range(len(xk))]
-gridk = np.mgrid[[slice(bounds[j][0], bounds[j][1], step) for j in range(len(xk))]]
-
-f = gridk[0]** + gridk[1]*2
-g,dx = np.gradient(f)
 >>>>>>> ba9abded135726b9452d6048504c698b6869fb7f

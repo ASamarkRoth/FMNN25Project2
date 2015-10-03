@@ -35,11 +35,11 @@ def get_hessian(g):
         return calc_hessian(g, x)
     return G
 
-x0 = np.array([1, 2])
+'''x0 = np.array([1, 2])
 x1 = np.array([2, 3])
 g = get_gradient(test_func)
 G = get_hessian(g)
 print(g(x0))
 print(G(x0))
 print(g(x1))
-print(G(x1))
+print(G(x1))'''

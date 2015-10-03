@@ -1,32 +1,7 @@
 """
 @author: Anton Roth, Linus Jangland and Samuel Wiqvist 
 """
-import numpy as np
-import scipy.linalg as sl
-import abc #abstract base classes
-<<<<<<< HEAD
-from gradhess import *
-<<<<<<< HEAD
-
-'''Suggestion of how to compute grid for computation of g, perhaps also H?
-Options: Create grid from the start which we use throughout whole optimisation or 
-everytime we compute gk and Hk we compute new grid? Isn't it necessary to introduce a new grid everytime to assure
-that xk+1 exists in the grid? '''
-
-xk = np.array([3,4])
-step =  0.001
-nbr_points = 5
-bounds = [((xk[j]-step*(nbr_points//2)),xk[j]+1.1*step*(nbr_points//2)) for j in range(len(xk))]
-gridk = np.mgrid[[slice(bounds[j][0], bounds[j][1], step) for j in range(len(xk))]]
-
-f = gridk[0]** + gridk[1]*2
-g,dx = np.gradient(f)
-
-#%% 
 '''Design suggestion'''
-=======
-from linesearh import *
->>>>>>> c18158a10e72cfc22a4be4e991745170d7e7822a
 
 class OptimizationProblem:
     '''A class which generates the necessary components to handle and solve an
@@ -130,55 +105,5 @@ class OriginalNewton(OptimizationMethods):
         G = get_hessian(gk)
         return(G(xk))
     
-=======
-#%%
-'''Suggestion of how to compute grid for computation of g, perhaps also H?
-Options: Create grid from the start which we use throughout whole optimisation or 
-everytime we compute gk and Hk we compute new grid? Isn't it necessary to introduce a new grid everytime to assure
-that xk+1 exists in the grid? '''
 
-xk = np.array([3,4])
-step =  0.001
-bounds = [((xk[j]-step*(nbr_points//2)),xk[j]+1.1*step*(nbr_points//2)) for j in range(len(xk))]
-gridk = np.mgrid[[slice(bounds[j][0], bounds[j][1], step) for j in range(len(xk))]]
-
-f = gridk[0]** + gridk[1]*2
-g,dx = np.gradient(f)
-
-
-#%%Testing abstract stuff
-class Newton:
-    
-    def __init__(self, f, x0, tol, *args, **kwargs):    
-        self.f = f
-        self.x0 = x0
-        self.tol = tol
-        self.g = kwargs.get('g')   
-    
-    @abc.abstractmethod
-    def get_new_x():
-        '''Defines new x'''
-    
-class Newton2(Newton):
-    
-    def get_new_x(self,k):
-        return self.x0+k
-<<<<<<< HEAD
-        
-#%%
-'''Cholesky on Hinv*gk = sk? or positive definiteness of H'''
-A = np.array([[1,2,3],[4,5,6],[7,8,9]])
-#L = sl.cho_factor(A)
-try:
-    L = sl.cho_factor(A)
-except sl.LinAlgError:
-        raise "The computed Hessian is not positive definite"
-gk = np.array([3,3,3])
-sk = sl.cho_solve(L,gk)
-
-'''Cholesky decomposition, A = LL*, if unique --> A positive definite
-H = J(g)'''
-
-#%%
-
->>>>>>> ba9abded135726b9452d6048504c698b6869fb7f
+ 

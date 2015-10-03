@@ -4,6 +4,7 @@
 import numpy as np
 import scipy.linalg as sl
 import abc #abstract base classes
+<<<<<<< HEAD
 from gradhess import *
 <<<<<<< HEAD
 
@@ -23,10 +24,10 @@ g,dx = np.gradient(f)
 
 #%% 
 '''Design suggestion'''
-
 =======
- 
->>>>>>> ba9abded135726b9452d6048504c698b6869fb7f
+from linesearh import *
+>>>>>>> c18158a10e72cfc22a4be4e991745170d7e7822a
+
 class OptimizationProblem:
     '''A class which generates the necessary components to handle and solve an
     optimization problem defined by an input function f'''
@@ -51,27 +52,23 @@ class OptimizationProblem:
 class OptimizationMethods:
     __metaclass__ = abc.ABCMeta
     
-    def __init__(self, OptimizationProblem, par_line = "exact"):
+    def __init__(self, OptimizationProblem, par_line_search = "exact"):
         self.f = OptimizationProblem.f
         self.x0 = OptimizationProblem.x0
         self.g = OptimizationProblem.g
-        self.par_line = par_line 
+        self.par_line_search = par_line_search 
     
     def newton_procedure():
         xk = self.x0.copy()
         fk = self.f.copy()
         gk = self.g.copy()
         Gk = _initial_hessian(gk, xk)
+        line_search = _get_line_search(fk, xk, tol, self.par_line_search)       
         while True:
-            sk = _newton_direction(Gk, gk)   
-            if par_line == "exact": 
-                alphak = self._line_search(fk, xk, tol = 1e-5, "exact")
-            elif par_line == "inexact":
-                alphak = self._line_search(fk, xk, tol = 1e-5, "inexact")
-            else:
-                alphak = 1
+            sk = _newton_direction(Gk, gk)  
+            alphak = line_search(fk, xk, gk, tol = 1e-5)
             xk = xk + alphak*sk
-            Gk = _update_hessian(Gk, self.xk)
+            Gk = _update_hessian(Gk, xk)
             if sl.norm(alphak*sk) < self.tol:
                 x = xk
                 fmin = f(xk)
@@ -80,7 +77,30 @@ class OptimizationMethods:
         
     def _newton_direction(Gk, gk):
         '''Computes sk'''
-        return (-1)*np.np.linalg.solve(Gk, gk)
+        return (-1)*np.linalg.solve(Gk, gk)
+    
+    def _get_line_search(fk, xk, tol = 1e-5, par_line_search):
+        '''Performs a line_search, finds the alpha which minimizes f(xk+alpha*sk)'''
+        if par_line_search == "exact":
+            def line_search(fk, xk, gk, tol = 1e-5):
+                return _exact_line_search(fk, xk, gk, tol = 1e-5)
+            return line_search
+        elif par_line_search == "inexact":
+            def line_search(fk, xk, tol = 1e-5):
+                return _inexact_line_search(fk, xk, gk, tol = 1e-5)
+            return line_search
+        else:
+            def line_search(fk, xk, tol = 1e-5):
+                return 1
+            return line_search
+        
+    def _exact_line_search(fk, xk, gk, tol = 1e-5):
+        return line_search(fk, xk, tol)
+    
+    def _inexact_line_search(fk, xk, gk, tol = 1e-5):
+        fp = np.dot(xk, gk) # detta borde vara ok 
+        alpha_0 = 1 # detta är nog inte rätt
+        return inexact_line_search(f, fp, alpha_0, tol)
         
     @abc.abstractmethod
     def _initial_hessian():
@@ -92,10 +112,6 @@ class OptimizationMethods:
             Updates the hessian
         '''
     
-    @abc.abstractmethod
-    def _line_search():
-        '''Performs a line_search, finds the alpha which minimizes f(xk+alpha*sk)'''
-
 
 class OriginalNewton(OptimizationMethods):
     

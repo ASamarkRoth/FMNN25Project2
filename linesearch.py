@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.linalg as sl
 
 def f(x, y, z):
     return x*x*y + np.sin(z)

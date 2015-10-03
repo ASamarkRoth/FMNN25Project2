@@ -40,7 +40,7 @@ class OptimizationMethods:
         Gk = _initial_hessian(gk, xk)
         line_search = _get_line_search(fk, xk, tol, self.par_line_search)       
         while True:
-            sk = _newton_direction(Gk, gk)  
+            sk = _newton_direction(Gk, gk, xk)  
             alphak = line_search(fk, xk, gk, tol = 1e-5)
             xk = xk + alphak*sk
             Gk = _update_hessian(Gk, xk)
@@ -50,9 +50,9 @@ class OptimizationMethods:
                 break
         return [x, fmin]
         
-    def _newton_direction(Gk, gk):
+    def _newton_direction(Gk, gk, xk):
         '''Computes sk'''
-        return (-1)*np.linalg.solve(Gk, gk)
+        return (-1)*np.linalg.solve(Gk, gk(xk))
     
     def _get_line_search(fk, xk, tol = 1e-5, par_line_search):
         '''Performs a line_search, finds the alpha which minimizes f(xk+alpha*sk)'''
@@ -73,7 +73,7 @@ class OptimizationMethods:
         return line_search(fk, xk, tol)
     
     def _inexact_line_search(fk, xk, gk, tol = 1e-5):
-        fp = np.dot(xk, gk) # detta borde vara ok 
+        fp = np.dot(xk, gk(xk)) # detta borde vara ok 
         alpha_0 = 1 # detta är nog inte rätt
         return inexact_line_search(f, fp, alpha_0, tol)
         

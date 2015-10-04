@@ -9,3 +9,6 @@ def rosenbrock_grad(x):
 if __name__ == "__main__":
     print(rosenbrock((1,2)))
     print(rosenbrock_grad((1,2)))
+
+
+

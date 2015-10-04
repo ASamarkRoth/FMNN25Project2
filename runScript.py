@@ -3,15 +3,32 @@
 from optimizationNewton import *
 import numpy as np
 
-'''Test rosenbrock'''
 from rosenbrock import *
+import optimizationNewton as onn
+from linesearch import *
+import numpy as np
 
+print("what is happening")
+
+'''Test rosenbrock'''
 f = rosenbrock
 g = rosenbrock_grad
-g(np.array([1,2]))
-
-#Minimum is at (1,1) and f(1,1) = 0
-guess = np.array([1.5,1.5])
-OP = OptimizationProblem(f, x0 = guess)
 
 
+def a(x):
+    return x[0]**2 + 2*x[1]**4
+def b(x):
+    return np.array([2*x[0], 8*x[1]**3])
+def c(alpha):
+	x0 = np.array([3,3])
+	s = np.array([-1,-1])
+	return a(x0 + alpha*s)
+
+print(type(a), type(b))
+print(line_search(c, 0))
+
+
+prob = onn.OptimizationProblem(a, b, np.array([7,11]))
+solver = onn.OriginalNewton(prob)
+print(solver.newton_procedure())
+>>>>>>> fb0ced4d9c40b6601f161ac1bbf34472d6d5166b

@@ -76,5 +76,6 @@ def inexact_line_search(f, fp, alpha_0, tol = 1e-5):
         RC = eval_RC(f, fp, alpha_0, alpha_l)
     return (alpha_0, f(alpha_0))
 
+'''
 print(line_search(g, 55, 1e-8))
-print(inexact_line_search(g, gp, 0))
+print(inexact_line_search(g, gp, 0))'''

@@ -25,12 +25,12 @@ def calc_hessian(g, x0, spacing = 1e-5):
         G[:, i] = col
     return G
 
-def get_gradient(f):
+def get_gradient(f, x):
     def g(x):
         return calc_gradient(f, x)
     return g
 
-def get_hessian(g):
+def get_hessian(g, x):
     def G(x):
         return calc_hessian(g, x)
     return G

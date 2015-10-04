@@ -1,27 +1,34 @@
 """
 @author: Anton Roth, Linus Jangland and Samuel Wiqvist 
 """
+import numpy as np
+import abc #abstract base classes
+from gradhess import *
+from linesearch import *
+from hessupdate import *
+
+
 '''Design suggestion'''
 
 class OptimizationProblem:
     '''A class which generates the necessary components to handle and solve an
     optimization problem defined by an input function f'''
-    def __init__(self, f, *args, **kwargs):
+    def __init__(self, f, x0 = 0, g = 0):
         self.f = f
-        self.x0 = kwargs.get('x0')
-        self.g = kwargs.get('g')
-        if(self.x0 == None):
+        if x0 == 0:
             self.x0 = self.guess_x(f)
-        if(self.g == None):
-            self.g = self.get_gradient(f,x0)
+        else:
+            self.x0 = np.asarray(x0)
+        print(self.x0)
+        if g == 0:
+            self.g = get_gradient(f,self.x0)
+        else:
+            self.g = g
     
     @staticmethod
     def guess_x(f):
-        return 1 #Can we do this? # dont we need to return a n-dim vector? 
+        return np.array([1]) #Can we do this? # dont we need to return a n-dim vector? 
         
-    @classmethod 
-    def get_gradient(cls, f,x0):
-        return 2 # shoulden we compute the gradient numericaly now? 
     
 '''This class is intended to be inherited'''
 class OptimizationMethods:
@@ -54,7 +61,7 @@ class OptimizationMethods:
         '''Computes sk'''
         return (-1)*np.linalg.solve(Gk, gk(xk))
     
-    def _get_line_search(fk, xk, tol = 1e-5, par_line_search):
+    def _get_line_search(fk, xk, par_line_search, tol = 1e-5):
         '''Performs a line_search, finds the alpha which minimizes f(xk+alpha*sk)'''
         if par_line_search == "exact":
             def line_search(fk, xk, gk, tol = 1e-5):
@@ -96,9 +103,10 @@ class OriginalNewton(OptimizationMethods):
             L = sl.cho_factor(Gk)
         except sl.LinAlgError:
             print("The computed Hessian was not positive definite!")
-        sk = sl.cho_solve(L,gk)
+        sk = sl.cho_solve(-L,gk) #minus sign?
+        return sk
     
-    def _update_hessian(G, xk, *args, **kwargs)
+    def _update_hessian(G, xk, *args, **kwargs):
         return G(xk)
         
     def _initial_hessian(gk,xk):

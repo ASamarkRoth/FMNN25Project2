@@ -15,6 +15,7 @@ def line_search(f, x0, tol = 1e-5):
     eps = min(1e-8, tol/10)
     a = x0
     b = x0 + 1
+    print("a, b = ", a, b)
     f1 = f(a)
     f2 = f(b)
     c = 1;
@@ -32,7 +33,7 @@ def line_search(f, x0, tol = 1e-5):
             b = mid
         else:
             a = mid
-    return (a, f(a))
+    return a
 
 def eval_LC(f, fp, alpha_0, alpha_l, rho = 0.4):
     return f(alpha_0) >= f(alpha_l) + (1 - rho)*(alpha_0 - alpha_l)*fp(alpha_l)
@@ -56,7 +57,6 @@ def inexact_line_search(f, fp, alpha_0, tol = 1e-5):
     chi = 9
     alpha_l = 0
     alpha_u = 10**4
-    alpha_0 = 33 # good gusss
     LC = eval_LC(f, fp, alpha_0, alpha_l)
     RC = eval_RC(f, fp, alpha_0, alpha_l)
     while not (LC and RC):
@@ -74,7 +74,7 @@ def inexact_line_search(f, fp, alpha_0, tol = 1e-5):
             alpha_0 = alpha_0_bar
         LC = eval_LC(f, fp, alpha_0, alpha_l)
         RC = eval_RC(f, fp, alpha_0, alpha_l)
-    return (alpha_0, f(alpha_0))
+    return alpha_0
 
 print(line_search(g, 55, 1e-8))
 print(inexact_line_search(g, gp, 0))

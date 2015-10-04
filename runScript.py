@@ -1,11 +1,29 @@
 '''Set FMNN25Project2 as consoles working directory!!!'''
-import numpy as np
-import scipy.linalg as sl
-import abc #abstract base classes
-from gradhess import *
-from linesearch import *
 from rosenbrock import *
+import optimizationNewton as onn
+from linesearch import *
+import numpy as np
+
+print("what is happening")
 
 '''Test rosenbrock'''
-f = rosenbrock_function(x)
-g = rosenbrock_gradient(x)
+f = rosenbrock
+g = rosenbrock_grad
+
+
+def a(x):
+    return x[0]**2 + 2*x[1]**4
+def b(x):
+    return np.array([2*x[0], 8*x[1]**3])
+def c(alpha):
+	x0 = np.array([3,3])
+	s = np.array([-1,-1])
+	return a(x0 + alpha*s)
+
+print(type(a), type(b))
+print(line_search(c, 0))
+
+
+prob = onn.OptimizationProblem(a, b, np.array([7,11]))
+solver = onn.OriginalNewton(prob)
+print(solver.newton_procedure())

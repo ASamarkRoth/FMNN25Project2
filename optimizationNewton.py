@@ -26,20 +26,18 @@ class OptimizationProblem:
         else:
             self.g = g
     
-    @staticmethod
-    def guess_x(f):
-        return 1 #Can we do this? # dont we need to return a n-dim vector? 
-    
+
 class OptimizationMethods(metaclass=ABCMeta):
     '''This class is intended to be inherited. It consists of the method
     newton_procedure which contains the common step that build up a Newton 
     method and returns the function minimum and the corresponding vector x. 
     Furthermore, line search methods are also defined within this class'''
     
-    def __init__(self, OptimizationProblem):
+    def __init__(self, OptimizationProblem, tol = 1e-5):
         self.f = OptimizationProblem.f
         self.x0 = OptimizationProblem.x0
         self.g = OptimizationProblem.g
+        self.tol = tol
     
     def newton_procedure(self, par_line_search = "exact"):
         xk = self.x0
@@ -56,24 +54,22 @@ class OptimizationMethods(metaclass=ABCMeta):
             xnew = xk + alphak*sk
             Gk = self._update_hessian(xk, xnew, self.g, Gk)
             xk = xnew
-            if sl.norm(alphak*sk) < 1e-5: # self.tol:
+            if sl.norm(alphak*sk) < self.tol:
                 x = xk
                 fmin = self.f(xk)
                 break
         return x, fmin
         
-    
     def _newton_direction(self, xk, g, G):
         '''Computes sk'''
         sk = -G.dot(g(xk))
         return sk
     
-
     def _get_line_search(self, par_line_search):
         '''Assign a line search algorithm to line_search'''
         if par_line_search == "exact":
             def line_search(f, fp, alpha_0):
-                return linesearch.exact_line_search(f, alpha_0)
+                return linesearch.exact_line_search(f, alpha_0, self.tol)
             return line_search
         elif par_line_search == "inexact":
             def line_search(f, fp, alpha_0):
@@ -84,11 +80,9 @@ class OptimizationMethods(metaclass=ABCMeta):
                 return 1
             return line_search
 
-        
     @abstractmethod
     def _initial_hessian():
         '''Returns the inital hessian'''
-    
     
     @abstractmethod
     def _update_hessian(): # is this also the update method 
@@ -106,14 +100,12 @@ class OriginalNewton(OptimizationMethods):
     def _newton_direction(self, xk, g, G):
         Gk = calc_hessian(g, xk)
         Gk = 0.5*(Gk + Gk.T)
-        #sk = -sl.solve(Gk, g(xk)) # just trying to see if it works
         try:
             L = sl.cho_factor(Gk)
         except sl.LinAlgError:
-            print("The computed Hessian was not positive definite!")
+            raise ValueError("The computed Hessian was not positive definite!")
         sk = -sl.cho_solve(L, g(xk))
         return sk
-        
     
     def _update_hessian(self, xk, xnew, g, G):
         return calc_hessian(g, xnew)
@@ -121,12 +113,15 @@ class OriginalNewton(OptimizationMethods):
     def _initial_hessian(self, xk, g):
         return calc_hessian(g, xk)
 
-class OptimizationMethodsBroyden(OptimizationMethods):
+class OptimizationMethodsQuasi(OptimizationMethods):
+    ''' Class OptimizationMethodsQuasi inherits OptimizationMethods and merely consists 
+    of methods of computation of the Hessian and using different updates methods'''
 
-    def __init__(self, OptimizationProblem, hessupdate = "broyden"):
+    def __init__(self, OptimizationProblem, hessupdate = "broyden", tol = 1e-5):
         self.f = OptimizationProblem.f
         self.x0 = OptimizationProblem.x0
         self.g = OptimizationProblem.g
+        self.tol = tol
         if hessupdate == "broyden":
             self.update_H = broyden
         elif hessupdate == "DFP":

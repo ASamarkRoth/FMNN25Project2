@@ -3,7 +3,7 @@ import scipy.linalg as sl
 
 def exact_line_search(f, alpha_0, tol = 1e-5):
     # dichotomus line search
-    eps = min(1e-8, tol/10)
+    eps = min(1e-8, tol/50)
     a = alpha_0
     b = alpha_0 + 1
     f1 = f(a)
@@ -25,10 +25,10 @@ def exact_line_search(f, alpha_0, tol = 1e-5):
             a = mid
     return a
 
-def eval_LC(f, fp, alpha_0, alpha_l, rho = 0.4):
+def eval_LC(f, fp, alpha_0, alpha_l, rho = 0.1):
     return f(alpha_0) >= f(alpha_l) + (1 - rho)*(alpha_0 - alpha_l)*fp(alpha_l)
 
-def eval_RC(f, fp, alpha_0, alpha_l, rho = 0.4):
+def eval_RC(f, fp, alpha_0, alpha_l, rho = 0.1):
     return f(alpha_0) <= f(alpha_l) + rho*(alpha_0 - alpha_l)*fp(alpha_l)
 
 def goldstein_extrapolate(fp, alpha_0, alpha_l):
@@ -39,7 +39,7 @@ def goldstein_interpolate(f, fp, alpha_0, alpha_l):
     denom = 2*(f(alpha_l) - f(alpha_0) + (alpha_0 - alpha_l)*fp(alpha_l))
     return num/denom
 
-def inexact_line_search(f, fp, alpha_0, tol = 1e-5):
+def inexact_line_search(f, fp, alpha_0):
     # goldstein
     alpha_0 += 1
     tau = 0.1

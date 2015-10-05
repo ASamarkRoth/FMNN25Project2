@@ -5,8 +5,6 @@ from optimizationNewton import *
 from linesearch import *
 import numpy as np
 
-print("what is happening")
-
 #%%
 '''Test with easy function'''
 def a(x):
@@ -39,13 +37,12 @@ solver = OriginalNewton(prob)
 f = rosenbrock
 g = rosenbrock_grad
 
-prob = OptimizationProblem(f, x0 = np.array([0,0]))
+prob = OptimizationProblem(f, x0 = np.array([5,6]))
 
 solver = OriginalNewton(prob)
 
 #print("Rosenbrock test")
 #print(solver.newton_procedure(par_line_search= "exact"))
 
-solver = OptimizationMethodsBroyden(prob, "BFGS")
+solver = OptimizationMethodsQuasi(prob, "broyden")
 print(solver.newton_procedure(par_line_search = "exact"))
-

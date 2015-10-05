@@ -1,19 +1,14 @@
 import numpy as np
 import scipy.linalg as sl
-import gradhess
-import linesearch
+from gradhess import *
+from linesearch import *
+from hessupdate import *
 from abc import ABCMeta
 from abc import abstractmethod
 
 """
 @author: Anton Roth, Linus Jangland and Samuel Wiqvist 
 """
-import numpy as np
-import abc #abstract base classes
-from gradhess import *
-from linesearch import *
-from hessupdate import *
-
 
 '''Design suggestion'''
 

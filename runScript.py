@@ -1,10 +1,7 @@
 '''Set FMNN25Project2 as consoles working directory!!!'''
 
-from optimizationNewton import *
-import numpy as np
-
 from rosenbrock import *
-import optimizationNewton as onn
+from optimizationNewton import *
 from linesearch import *
 import numpy as np
 
@@ -28,7 +25,7 @@ print(type(a), type(b))
 print(line_search(c, 0))
 
 
-prob = onn.OptimizationProblem(a, b, np.array([7,11]))
-solver = onn.OriginalNewton(prob)
+prob = OptimizationProblem(a, b, np.array([7,11]))
+solver = OriginalNewton(prob)
 print(solver.newton_procedure())
 >>>>>>> fb0ced4d9c40b6601f161ac1bbf34472d6d5166b

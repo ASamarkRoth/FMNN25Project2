@@ -11,6 +11,10 @@ print("what is happening")
 f = rosenbrock
 g = rosenbrock_grad
 
+'''No gradient inserted'''
+prob = OptimizationProblem(a, x0 = np.array([7,11]))
+
+
 
 def a(x):
     return x[0]**2 + 2*x[1]**4
@@ -26,6 +30,9 @@ print(line_search(c, 0))
 
 
 prob = OptimizationProblem(a, b, np.array([7,11]))
+
+
+
 solver = OriginalNewton(prob)
 print(solver.newton_procedure())
 >>>>>>> fb0ced4d9c40b6601f161ac1bbf34472d6d5166b

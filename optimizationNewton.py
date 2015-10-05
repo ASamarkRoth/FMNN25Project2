@@ -18,14 +18,16 @@ class OptimizationProblem:
         
     def __init__(self, f, g = None, x0 = None):
         self.f = f
-        if (g == None):
-            self.g = gradhess.get_gradient(f)
-        else:
-            self.g = g
         if (x0 == None):
             self.x0 = 3
         else:
-            self.x0 = x0
+            self.x0 = np.asarray(x0)
+        print(len(self.x0))
+        print(self.x0)
+        if (g == None):
+            self.g = get_gradient(f,self.x0)
+        else:
+            self.g = np.asarray(g)
     
     @staticmethod
     def guess_x(f):
@@ -105,7 +107,7 @@ class OptimizationMethods(metaclass=ABCMeta):
 class OriginalNewton(OptimizationMethods):
     
     def _newton_direction(self, xk, g, G):
-        Gk = gradhess.calc_hessian(g, xk)
+        Gk = calc_hessian(g, xk)
         Gk = 0.5*(Gk + Gk.T)
         sk = -sl.solve(Gk, g(xk)) # just trying to see if it works
         return sk
@@ -116,7 +118,7 @@ class OriginalNewton(OptimizationMethods):
             '''
     
     def _update_hessian(self, xk, g):
-        return gradhess.calc_hessian(g, xk)
+        return calc_hessian(g, xk)
         
     def _initial_hessian(self, xk, g):
-        return gradhess.calc_hessian(g, xk)
+        return calc_hessian(g, xk)

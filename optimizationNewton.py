@@ -123,10 +123,10 @@ class OriginalNewton(OptimizationMethods):
 
 class OptimizationMethodsBroyden(OptimizationMethods):
 
-    def _update_hessian(self, xk, xk_old, gk, G): 
-        delta = xk - xk_old
-        gamma = gk(xk) - gk(sk)
-        return broyden(H, delta, gamma)
+    def _update_hessian(self, xk, xnew, g, G): 
+        delta = xnew - xk
+        gamma = g(xnew) - g(xk)
+        return broyden(G, delta, gamma)
         
     def _initial_hessian(self, xk, gk):
         return np.identity(len(self.x0))

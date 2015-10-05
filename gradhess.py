@@ -1,9 +1,6 @@
 import numpy as np
 from scipy.misc import derivative
 
-def test_func(x):
-    return x[0]**2 + x[0]*x[1]**3
-
 def calc_gradient(f, x0, spacing = 1e-5):
     n = len(x0)
     g = np.zeros(n)
@@ -35,7 +32,10 @@ def get_hessian(g):
         return calc_hessian(g, x)
     return G
 
-'''x0 = np.array([1, 2])
+'''
+def test_func(x):
+    return x[0]**2 + x[0]*x[1]**3
+x0 = np.array([1, 2])
 x1 = np.array([2, 3])
 g = get_gradient(test_func)
 G = get_hessian(g)

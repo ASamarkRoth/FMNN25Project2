@@ -66,15 +66,15 @@ class OptimizationMethods(metaclass=ABCMeta):
         '''Computes sk'''
     
 
-    def _get_line_search(par_line_search):
+    def _get_line_search(self, par_line_search):
         '''Assign a line search algorithm to line_search'''
         if par_line_search == "exact":
             def line_search(f, fp, alpha_0):
-                return linesearch.line_search(f, alpha_0)
+                return line_search(f, alpha_0)
             return line_search
         elif par_line_search == "inexact":
             def line_search(f, fp, alpha_0):
-                return linesearch.inexact_line_search(f, fp, alpha_0)
+                return inexact_line_search(f, fp, alpha_0)
             return line_search
         elif par_line_search == "None":
             def line_search(f, fp, alpha_0):

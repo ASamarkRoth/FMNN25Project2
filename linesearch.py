@@ -1,15 +1,6 @@
 import numpy as np
 import scipy.linalg as sl
 
-def f(x, y, z):
-    return x*x*y + np.sin(z)
-
-def g(x):
-    return (x - 120)**4
-
-def gp(x):
-    return 4*(x - 120)**3
-
 def line_search(f, x0, tol = 1e-5):
     # dichotomus line search
     eps = min(1e-8, tol/10)
@@ -77,5 +68,14 @@ def inexact_line_search(f, fp, alpha_0, tol = 1e-5):
     return alpha_0
 
 '''
+def f(x, y, z):
+    return x*x*y + np.sin(z)
+
+def g(x):
+    return (x - 120)**4
+
+def gp(x):
+    return 4*(x - 120)**3
+    
 print(line_search(g, 55, 1e-8))
 print(inexact_line_search(g, gp, 0))'''

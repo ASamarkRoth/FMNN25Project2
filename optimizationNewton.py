@@ -63,7 +63,7 @@ class OptimizationMethods(metaclass=ABCMeta):
         return [x, fmin]
         
     @abstractmethod
-    def _newton_direction(self, xk, gk, Gk):
+    def _newton_direction():
         '''Computes sk'''
     
 
@@ -93,12 +93,12 @@ class OptimizationMethods(metaclass=ABCMeta):
         return inexact_line_search(f, fp, alpha_0, tol)
         
     @abstractmethod
-    def _initial_hessian(self, xk, g):
+    def _initial_hessian():
         pass
         '''Returns the inital hessian'''
     
     @abstractmethod
-    def _update_hessian(self): # is this also the update method 
+    def _update_hessian(): # is this also the update method 
         pass
         '''Computes and returns hessian or hessian approx. 
             Updates the hessian

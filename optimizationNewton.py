@@ -31,7 +31,10 @@ class OptimizationProblem:
         return 1 #Can we do this? # dont we need to return a n-dim vector? 
     
 class OptimizationMethods(metaclass=ABCMeta):
-    '''This class is intended to be inherited'''
+    '''This class is intended to be inherited. It consists of the method
+    newton_procedure which contains the common step that build up a Newton 
+    method and returns the function minimum and the corresponding vector x. 
+    Furthermore, line search methods are also defined within this class'''
     
     def __init__(self, OptimizationProblem):
         self.f = OptimizationProblem.f
@@ -84,18 +87,20 @@ class OptimizationMethods(metaclass=ABCMeta):
         
     @abstractmethod
     def _initial_hessian():
-        pass
         '''Returns the inital hessian'''
+    
     
     @abstractmethod
     def _update_hessian(): # is this also the update method 
-        pass
         '''Computes and returns hessian or hessian approx. 
             Updates the hessian
-        '''
+        '''        
     
 
 class OriginalNewton(OptimizationMethods):
+    ''' Class OriginalNewton inherits OptimizationMethods and merely consists 
+    of methods of computation of the Hessian and a calculation of its' inverse 
+    a Cholesky factorization.'''
     
     def _newton_direction(self, xk, g, G):
         Gk = calc_hessian(g, xk)

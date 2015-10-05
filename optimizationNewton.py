@@ -60,7 +60,7 @@ class OptimizationMethods(metaclass=ABCMeta):
                 x = xk
                 fmin = self.f(xk)
                 break
-        return [x, fmin]
+        return x, fmin
         
     
     def _newton_direction(self, xk, g, G):

@@ -81,15 +81,6 @@ class OptimizationMethods(metaclass=ABCMeta):
                 return 1
             return line_search
 
-    def _exact_line_search(fk, xk, gk, tol = 1e-5):
-        '''Performs a exact line search'''
-        return line_search(fk, xk, tol)
-    
-    def _inexact_line_search(fk, xk, gk, tol = 1e-5):
-        '''Performs a inexact line search, finds the alpha which minimizes f(xk+alpha*sk)'''
-        fp = np.dot(xk, gk(xk)) # detta borde vara ok 
-        alpha_0 = 1 # detta är nog inte rätt
-        return inexact_line_search(f, fp, alpha_0, tol)
         
     @abstractmethod
     def _initial_hessian():

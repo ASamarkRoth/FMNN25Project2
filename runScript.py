@@ -44,5 +44,5 @@ solver = OriginalNewton(prob)
 #print("Rosenbrock test")
 #print(solver.newton_procedure(par_line_search= "exact"))
 
-solver = OptimizationMethodsBroyden(prob, "broyden")
+solver = OptimizationMethodsQuasi(prob, "broyden")
 print(solver.newton_procedure(par_line_search = "exact"))

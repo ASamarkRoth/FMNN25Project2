@@ -112,7 +112,7 @@ class OriginalNewton(OptimizationMethods):
     def _initial_hessian(self, xk, g):
         return calc_hessian(g, xk)
 
-class OptimizationMethodsBroyden(OptimizationMethods):
+class OptimizationMethodsQuasi(OptimizationMethods):
 
     def __init__(self, OptimizationProblem, hessupdate = "broyden", tol = 1e-5):
         self.f = OptimizationProblem.f

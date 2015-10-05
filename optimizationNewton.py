@@ -40,22 +40,21 @@ class OptimizationMethods(metaclass=ABCMeta):
     
     def newton_procedure(self, par_line_search = "exact"):
         xk = self.x0
-        fk = self.f
-        fp = fk # well ok..
-        gk = self.g
-        Gk = self._initial_hessian(xk, gk)
+        Gk = self._initial_hessian(xk, self.g)
         line_search = self._get_line_search(par_line_search)
         while True:
-            sk = self._newton_direction(xk, gk, Gk)
+            sk = self._newton_direction(xk, self.g, Gk)
             def f_linear(alpha):
-                return fk(xk + alpha*sk)
-            alphak = line_search(f_linear, fp, 0)
-            #print("xk =", xk, ", sk = ", sk, ", alpha_k = ", alphak)
+                return self.f(xk + alpha*sk)
+            def f_linear_derivative(alpha):
+                return self.g(xk + alpha*sk).dot(sk)
+            alphak = line_search(f_linear, f_linear_derivative, 0)
+            print("xk =", xk, ", fk = ", self.f(xk), ", sk = ", sk, ", alpha_k = ", alphak)
             xk = xk + alphak*sk
-            Gk = self._update_hessian(xk, gk)
-            if np.linalg.norm(alphak*sk) < 1e-5: # self.tol:
+            Gk = self._update_hessian(xk, self.g)
+            if sl.norm(alphak*sk) < 1e-5: # self.tol:
                 x = xk
-                fmin = fk(xk)
+                fmin = self.f(xk)
                 break
         return [x, fmin]
         

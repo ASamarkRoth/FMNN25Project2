@@ -113,6 +113,8 @@ class OriginalNewton(OptimizationMethods):
         return calc_hessian(g, xk)
 
 class OptimizationMethodsQuasi(OptimizationMethods):
+    ''' Class OptimizationMethodsQuasi inherits OptimizationMethods and merely consists 
+    of methods of computation of the Hessian and using different updates methods'''
 
     def __init__(self, OptimizationProblem, hessupdate = "broyden", tol = 1e-5):
         self.f = OptimizationProblem.f

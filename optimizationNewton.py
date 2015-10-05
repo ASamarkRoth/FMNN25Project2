@@ -52,7 +52,7 @@ class OptimizationMethods(metaclass=ABCMeta):
             def f_linear(alpha):
                 return fk(xk + alpha*sk)
             alphak = line_search(f_linear, fp, 0)
-            #print("xk =", xk, ", sk = ", sk, ", alpha_k = ", alphak)
+            print("xk =", xk, ", fk = ", fk(xk), ", sk = ", sk, ", alpha_k = ", alphak)
             xk = xk + alphak*sk
             Gk = self._update_hessian(xk, gk)
             if np.linalg.norm(alphak*sk) < 1e-5: # self.tol:

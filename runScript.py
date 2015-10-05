@@ -18,14 +18,14 @@ def c(alpha):
 	s = np.array([-1,-1])
 	return a(x0 + alpha*s)
 
-print(type(a), type(b))
-print(line_search(c, 0))
+#print(type(a), type(b))
+print(exact_line_search(c, 0))
 
 
 prob = OptimizationProblem(a, g = b, x0 = np.array([7,11]))
 
 solver = OriginalNewton(prob)
-print(solver.newton_procedure())
+#print("test on a,b thing", solver.newton_procedure())
 
 '''No gradient inserted'''
 #prob = OptimizationProblem(a, x0 = np.array([7,11]))
@@ -35,11 +35,7 @@ print(solver.newton_procedure())
 f = rosenbrock
 g = rosenbrock_grad
 
-prob = OptimizationProblem(f, g = g, x0 = np.array([3,3]))
+prob = OptimizationProblem(rosenbrock, g = None, x0 = np.array([3,3]))
 
 solver = OriginalNewton(prob)
-solver.newton_procedure()
-
-
-
-
+print(solver.newton_procedure())

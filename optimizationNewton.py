@@ -21,8 +21,6 @@ class OptimizationProblem:
             self.x0 = np.array([4,4])
         else:
             self.x0 = np.asarray(x0)
-            print(len(self.x0))
-            print(self.x0)
         if g == None:
             self.g = get_gradient(f)
         else:
@@ -61,9 +59,10 @@ class OptimizationMethods(metaclass=ABCMeta):
                 break
         return [x, fmin]
         
-    @abstractmethod
-    def _newton_direction():
+    
+    def _newton_direction(self, xk, g, G):
         '''Computes sk'''
+        
     
 
     def _get_line_search(self, par_line_search):
@@ -109,13 +108,14 @@ class OriginalNewton(OptimizationMethods):
     def _newton_direction(self, xk, g, G):
         Gk = calc_hessian(g, xk)
         Gk = 0.5*(Gk + Gk.T)
-        sk = -sl.solve(Gk, g(xk)) # just trying to see if it works
-        return sk
-        '''try:
+        #sk = -sl.solve(Gk, g(xk)) # just trying to see if it works
+        try:
             L = sl.cho_factor(Gk)
         except sl.LinAlgError:
             print("The computed Hessian was not positive definite!")
-            '''
+        sk = -sl.cho_solve(L, g(xk))
+        return sk
+        
     
     def _update_hessian(self, xk, g):
         return calc_hessian(g, xk)

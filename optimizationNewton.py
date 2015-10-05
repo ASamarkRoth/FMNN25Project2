@@ -17,16 +17,16 @@ class OptimizationProblem:
         
     def __init__(self, f, g = None, x0 = None):
         self.f = f
-        if (x0 == None):
-            self.x0 = 3
+        if x0 == None:
+            self.x0 = np.array([4,4])
         else:
             self.x0 = np.asarray(x0)
-        print(len(self.x0))
-        print(self.x0)
-        if (g == None):
-            self.g = get_gradient(f,self.x0)
+            print(len(self.x0))
+            print(self.x0)
+        if g == None:
+            self.g = get_gradient(f)
         else:
-            self.g = np.asarray(g)
+            self.g = g
     
     @staticmethod
     def guess_x(f):
@@ -35,19 +35,18 @@ class OptimizationProblem:
 class OptimizationMethods(metaclass=ABCMeta):
     '''This class is intended to be inherited'''
     
-    def __init__(self, OptimizationProblem, par_line_search = "exact"):
+    def __init__(self, OptimizationProblem):
         self.f = OptimizationProblem.f
         self.x0 = OptimizationProblem.x0
         self.g = OptimizationProblem.g
-        self.par_line_search = par_line_search 
     
-    def newton_procedure(self):
+    def newton_procedure(self, par_line_search = "exact"):
         xk = self.x0
         fk = self.f
         fp = fk # well ok..
         gk = self.g
         Gk = self._initial_hessian(xk, gk)
-        line_search = self._get_line_search()
+        line_search = self._get_line_search(par_line_search)
         while True:
             sk = self._newton_direction(xk, gk, Gk)
             def f_linear(alpha):
@@ -67,17 +66,17 @@ class OptimizationMethods(metaclass=ABCMeta):
         '''Computes sk'''
     
 
-    def _get_line_search(self):
+    def _get_line_search(par_line_search):
         '''Assign a line search algorithm to line_search'''
-        if self.par_line_search == "exact":
+        if par_line_search == "exact":
             def line_search(f, fp, alpha_0):
                 return linesearch.line_search(f, alpha_0)
             return line_search
-        elif self.par_line_search == "inexact":
+        elif par_line_search == "inexact":
             def line_search(f, fp, alpha_0):
                 return linesearch.inexact_line_search(f, fp, alpha_0)
             return line_search
-        else:
+        elif par_line_search == "None":
             def line_search(f, fp, alpha_0):
                 return 1
             return line_search

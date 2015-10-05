@@ -1,3 +1,7 @@
+"""
+@author: Anton Roth, Linus Jangland and Samuel Wiqvist 
+"""
+
 import numpy as np
 import scipy.linalg as sl
 from gradhess import *
@@ -6,11 +10,6 @@ from hessupdate import *
 from abc import ABCMeta
 from abc import abstractmethod
 
-"""
-@author: Anton Roth, Linus Jangland and Samuel Wiqvist 
-"""
-
-'''Design suggestion'''
 
 class OptimizationProblem:
     '''A class which generates the necessary components to handle and solve an
@@ -31,8 +30,8 @@ class OptimizationProblem:
     def guess_x(f):
         return 1 #Can we do this? # dont we need to return a n-dim vector? 
     
-'''This class is intended to be inherited'''
 class OptimizationMethods(metaclass=ABCMeta):
+    '''This class is intended to be inherited'''
     
     def __init__(self, OptimizationProblem, par_line_search = "exact"):
         self.f = OptimizationProblem.f
@@ -67,7 +66,7 @@ class OptimizationMethods(metaclass=ABCMeta):
     
 
     def _get_line_search(self):
-        '''Performs a line_search, finds the alpha which minimizes f(xk+alpha*sk)'''
+        '''Assign a line search algorithm to line_search'''
         if self.par_line_search == "exact":
             def line_search(f, fp, alpha_0):
                 return linesearch.line_search(f, alpha_0)
@@ -82,9 +81,11 @@ class OptimizationMethods(metaclass=ABCMeta):
             return line_search
 
     def _exact_line_search(fk, xk, gk, tol = 1e-5):
+        '''Performs a exact line search'''
         return line_search(fk, xk, tol)
     
     def _inexact_line_search(fk, xk, gk, tol = 1e-5):
+        '''Performs a inexact line search, finds the alpha which minimizes f(xk+alpha*sk)'''
         fp = np.dot(xk, gk(xk)) # detta borde vara ok 
         alpha_0 = 1 # detta är nog inte rätt
         return inexact_line_search(f, fp, alpha_0, tol)

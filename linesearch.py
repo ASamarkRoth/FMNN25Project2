@@ -1,12 +1,12 @@
 import numpy as np
 import scipy.linalg as sl
 
-def line_search(f, x0, tol = 1e-5):
+def exact_line_search(f, x0, tol = 1e-5):
     # dichotomus line search
     eps = min(1e-8, tol/10)
     a = x0
     b = x0 + 1
-    print("a, b = ", a, b)
+    #print("a, b = ", a, b)
     f1 = f(a)
     f2 = f(b)
     c = 1;

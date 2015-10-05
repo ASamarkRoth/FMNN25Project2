@@ -5,7 +5,7 @@
 import numpy as np
 import scipy.linalg as sl
 from gradhess import *
-from linesearch import *
+import linesearch
 from hessupdate import *
 from abc import ABCMeta
 from abc import abstractmethod
@@ -52,7 +52,7 @@ class OptimizationMethods(metaclass=ABCMeta):
             def f_linear(alpha):
                 return fk(xk + alpha*sk)
             alphak = line_search(f_linear, fp, 0)
-            print("xk =", xk, ", sk = ", sk, ", alpha_k = ", alphak)
+            #print("xk =", xk, ", sk = ", sk, ", alpha_k = ", alphak)
             xk = xk + alphak*sk
             Gk = self._update_hessian(xk, gk)
             if np.linalg.norm(alphak*sk) < 1e-5: # self.tol:
@@ -70,11 +70,11 @@ class OptimizationMethods(metaclass=ABCMeta):
         '''Assign a line search algorithm to line_search'''
         if par_line_search == "exact":
             def line_search(f, fp, alpha_0):
-                return line_search(f, alpha_0)
+                return linesearch.exact_line_search(f, alpha_0)
             return line_search
         elif par_line_search == "inexact":
             def line_search(f, fp, alpha_0):
-                return inexact_line_search(f, fp, alpha_0)
+                return linesearch.inexact_line_search(f, fp, alpha_0)
             return line_search
         elif par_line_search == "None":
             def line_search(f, fp, alpha_0):
@@ -122,3 +122,5 @@ class OriginalNewton(OptimizationMethods):
         
     def _initial_hessian(self, xk, g):
         return calc_hessian(g, xk)
+
+

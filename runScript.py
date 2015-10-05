@@ -7,9 +7,6 @@ import numpy as np
 
 print("what is happening")
 
-'''No gradient inserted'''
-prob = OptimizationProblem(a, x0 = np.array([7,11]))
-
 #%%
 '''Test with easy function'''
 def a(x):
@@ -30,6 +27,9 @@ prob = OptimizationProblem(a, g = b, x0 = np.array([7,11]))
 solver = OriginalNewton(prob)
 print(solver.newton_procedure())
 
+'''No gradient inserted'''
+#prob = OptimizationProblem(a, x0 = np.array([7,11]))
+
 #%%
 '''Test rosenbrock'''
 f = rosenbrock
@@ -40,7 +40,6 @@ prob = OptimizationProblem(f, g = g, x0 = np.array([3,3]))
 solver = OriginalNewton(prob)
 solver.newton_procedure()
 
-solver.newton_procedure()
 
 
 

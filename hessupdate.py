@@ -5,6 +5,7 @@ import numpy as np
 def broyden(H, delta, gamma):
     ''' H is the current inverse of the hessian, returns the inverse for the next iteration '''
     u = delta - H.dot(gamma)
+    print("u = ", u , ", delta = ", delta, ", gamma = ", gamma)
     a = 1/u.dot(gamma)
     return H + a*np.outer(u, u)
 

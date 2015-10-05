@@ -1,11 +1,11 @@
 import numpy as np
 import scipy.linalg as sl
 
-def exact_line_search(f, x0, tol = 1e-5):
+def exact_line_search(f, alpha_0, tol = 1e-5):
     # dichotomus line search
     eps = min(1e-8, tol/10)
-    a = x0
-    b = x0 + 1
+    a = alpha_0
+    b = alpha_0 + 1
     #print("a, b = ", a, b)
     f1 = f(a)
     f2 = f(b)
@@ -43,8 +43,6 @@ def goldstein_interpolate(f, fp, alpha_0, alpha_l):
 def inexact_line_search(f, fp, alpha_0, tol = 1e-5):
     # goldstein
     alpha_0 += 1
-    rho = 0.1
-    sigma = 0.7
     tau = 0.1
     chi = 9
     alpha_l = 0
@@ -67,16 +65,3 @@ def inexact_line_search(f, fp, alpha_0, tol = 1e-5):
         LC = eval_LC(f, fp, alpha_0, alpha_l)
         RC = eval_RC(f, fp, alpha_0, alpha_l)
     return alpha_0
-
-'''
-def f(x, y, z):
-    return x*x*y + np.sin(z)
-
-def g(x):
-    return (x - 120)**4
-
-def gp(x):
-    return 4*(x - 120)**3
-    
-print(line_search(g, 55, 1e-8))
-print(inexact_line_search(g, gp, 0))'''

@@ -46,6 +46,6 @@ solver = OriginalNewton(prob)
 #print("Rosenbrock test")
 #print(solver.newton_procedure(par_line_search= "exact"))
 
-solver = OptimizationMethodsBroyden(prob)
+solver = OptimizationMethodsBroyden(prob, "BFGS")
 print(solver.newton_procedure(par_line_search = "exact"))
 

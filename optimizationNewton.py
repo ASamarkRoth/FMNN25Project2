@@ -50,8 +50,9 @@ class OptimizationMethods(metaclass=ABCMeta):
                 return self.g(xk + alpha*sk).dot(sk)
             alphak = line_search(f_linear, f_linear_derivative, 0)
             print("xk =", xk, ", fk = ", self.f(xk), ", sk = ", sk, ", alpha_k = ", alphak)
-            xk = xk + alphak*sk
-            Gk = self._update_hessian(xk, self.g)
+            xnew = xk + alphak*sk
+            Gk = self._update_hessian(xk, xnew, self.g, Gk)
+            xk = xnew
             if sl.norm(alphak*sk) < 1e-5: # self.tol:
                 x = xk
                 fmin = self.f(xk)
@@ -116,10 +117,18 @@ class OriginalNewton(OptimizationMethods):
         return sk
         
     
-    def _update_hessian(self, xk, g):
-        return calc_hessian(g, xk)
+    def _update_hessian(self, xk, xnew, g, G):
+        return calc_hessian(g, xnew)
         
     def _initial_hessian(self, xk, g):
         return calc_hessian(g, xk)
 
+class OptimizationMethodsBroyden(OptimizationMethods):
 
+    def _update_hessian(self, xk, xk_old, gk, G): 
+        delta = xk - xk_old
+        gamma = gk(xk) - gk(sk)
+        return broyden(H, delta, gamma)
+        
+    def _initial_hessian(self, xk, gk):
+        return np.identity(len(self.x0))

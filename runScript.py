@@ -27,7 +27,7 @@ print(exact_line_search(c, 0))
 prob = OptimizationProblem(a, g = b, x0 = np.array([7,11]))
 
 solver = OriginalNewton(prob)
-print("Linus testfunc')
+print("Linus testfunc")
 print(solver.newton_procedure(par_line_search="None"))
 #print("test on a,b thing", solver.newton_procedure())
 
@@ -39,7 +39,6 @@ print(solver.newton_procedure(par_line_search="None"))
 f = rosenbrock
 g = rosenbrock_grad
 
-<<<<<<< HEAD
 prob = OptimizationProblem(f, x0 = np.array([30,30]))
 
 solver = OriginalNewton(prob)

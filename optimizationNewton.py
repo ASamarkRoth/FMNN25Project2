@@ -49,7 +49,7 @@ class OptimizationMethods(metaclass=ABCMeta):
             def f_linear_derivative(alpha):
                 return self.g(xk + alpha*sk).dot(sk)
             alphak = line_search(f_linear, f_linear_derivative, 0)
-            print("xk =", xk, ", fk = ", self.f(xk), ", sk = ", sk, ", alpha_k = ", alphak)
+            #print("xk =", xk, ", fk = ", self.f(xk), ", sk = ", sk, ", alpha_k = ", alphak)
             xk = xk + alphak*sk
             Gk = self._update_hessian(xk, self.g)
             if sl.norm(alphak*sk) < 1e-5: # self.tol:
@@ -61,7 +61,8 @@ class OptimizationMethods(metaclass=ABCMeta):
     
     def _newton_direction(self, xk, g, G):
         '''Computes sk'''
-        
+        sk = -G.dot(g(xk))
+        return sk
     
 
     def _get_line_search(self, par_line_search):

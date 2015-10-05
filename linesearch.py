@@ -6,7 +6,6 @@ def exact_line_search(f, alpha_0, tol = 1e-5):
     eps = min(1e-8, tol/10)
     a = alpha_0
     b = alpha_0 + 1
-    #print("a, b = ", a, b)
     f1 = f(a)
     f2 = f(b)
     c = 1;

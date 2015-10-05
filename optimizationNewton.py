@@ -122,10 +122,21 @@ class OriginalNewton(OptimizationMethods):
 
 class OptimizationMethodsBroyden(OptimizationMethods):
 
-    def _update_hessian(self, xk, xnew, g, G): 
+    def __init__(self, OptimizationProblem, hessupdate = "broyden"):
+        self.f = OptimizationProblem.f
+        self.x0 = OptimizationProblem.x0
+        self.g = OptimizationProblem.g
+        if hessupdate == "broyden":
+            self.update_H = broyden
+        elif hessupdate == "DFP":
+            self.update_H = DFP
+        elif hessupdate == "BFGS":
+            self.update_H = BFGS
+        
+    def _update_hessian(self, xk, xnew, g, G): # inparametern G är egentligen H
         delta = xnew - xk
         gamma = g(xnew) - g(xk)
-        H =  broyden(G, delta, gamma)
+        H =  self.update_H(G, delta, gamma)
         a = 1
         while True: # making sure H is positive definite
             try:

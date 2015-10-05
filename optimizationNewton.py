@@ -52,7 +52,7 @@ class OptimizationMethods(metaclass=ABCMeta):
             def f_linear_derivative(alpha):
                 return self.g(xk + alpha*sk).dot(sk)
             alphak = line_search(f_linear, f_linear_derivative, 0)
-            print("xk =", xk, ", fk = ", self.f(xk), ", sk = ", sk, ", alpha_k = ", alphak)
+            #print("xk =", xk, ", fk = ", self.f(xk), ", sk = ", sk, ", alpha_k = ", alphak)
             xnew = xk + alphak*sk
             Gk = self._update_hessian(xk, xnew, self.g, Gk)
             xk = xnew
@@ -92,7 +92,8 @@ class OptimizationMethods(metaclass=ABCMeta):
     
     @abstractmethod
     def _update_hessian(): # is this also the update method 
-        '''Computes and returns hessian or hessian approx. 
+        '''Computes and returns hessian, hessian approximation or hessian 
+        inverse. 
             Updates the hessian
         '''        
     

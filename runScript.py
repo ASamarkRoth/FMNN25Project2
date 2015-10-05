@@ -20,15 +20,15 @@ def c(alpha):
 
 #print(type(a), type(b))
 #print(line_search(c, 0))
-print(exact_line_search(c, 0))
+#print(exact_line_search(c, 0))
 
 
 
 prob = OptimizationProblem(a, g = b, x0 = np.array([7,11]))
 
 solver = OriginalNewton(prob)
-print("Linus testfunc")
-print(solver.newton_procedure(par_line_search="None"))
+#print("Linus testfunc")
+#print(solver.newton_procedure(par_line_search="None"))
 #print("test on a,b thing", solver.newton_procedure())
 
 '''No gradient inserted'''
@@ -39,12 +39,13 @@ print(solver.newton_procedure(par_line_search="None"))
 f = rosenbrock
 g = rosenbrock_grad
 
-prob = OptimizationProblem(f, x0 = np.array([30,30]))
+prob = OptimizationProblem(f, x0 = np.array([0,0]))
 
 solver = OriginalNewton(prob)
 
-print("Rosenbrock test")
-print(solver.newton_procedure(par_line_search= "exact"))
+#print("Rosenbrock test")
+#print(solver.newton_procedure(par_line_search= "exact"))
 
-
+solver = OptimizationMethodsBroyden(prob)
+print(solver.newton_procedure(par_line_search = "exact"))
 

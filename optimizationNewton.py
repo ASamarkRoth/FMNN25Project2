@@ -125,7 +125,16 @@ class OptimizationMethodsBroyden(OptimizationMethods):
     def _update_hessian(self, xk, xnew, g, G): 
         delta = xnew - xk
         gamma = g(xnew) - g(xk)
-        return broyden(G, delta, gamma)
+        H =  broyden(G, delta, gamma)
+        a = 1
+        while True: # making sure H is positive definite
+            try:
+                L = sl.cho_factor(H)
+                break
+            except sl.LinAlgError:
+                H += a*np.identity(len(self.x0))
+                a *= 4
+        return H
         
     def _initial_hessian(self, xk, gk):
         return np.identity(len(self.x0))

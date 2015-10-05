@@ -38,4 +38,4 @@ g = rosenbrock_grad
 prob = OptimizationProblem(rosenbrock, g = None, x0 = np.array([3,3]))
 
 solver = OriginalNewton(prob)
-print(solver.newton_procedure())
+print(solver.newton_procedure("inexact"))

@@ -51,7 +51,9 @@ class OptimizationMethods(metaclass=ABCMeta):
             sk = self._newton_direction(xk, gk, Gk)
             def f_linear(alpha):
                 return fk(xk + alpha*sk)
-            alphak = line_search(f_linear, fp, 0)
+            def f_linear_derivative(alpha):
+                return gk(xk + alpha*sk).dot(sk)
+            alphak = line_search(f_linear, f_linear_derivative, 0)
             print("xk =", xk, ", fk = ", fk(xk), ", sk = ", sk, ", alpha_k = ", alphak)
             xk = xk + alphak*sk
             Gk = self._update_hessian(xk, gk)

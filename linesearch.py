@@ -42,6 +42,7 @@ def goldstein_interpolate(f, fp, alpha_0, alpha_l):
 
 def inexact_line_search(f, fp, alpha_0, tol = 1e-5):
     # goldstein
+    alpha_0 += 1
     rho = 0.1
     sigma = 0.7
     tau = 0.1

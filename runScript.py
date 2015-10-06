@@ -46,3 +46,6 @@ solver = OriginalNewton(prob)
 
 solver = OptimizationMethodsQuasi(prob, "broyden")
 print(solver.newton_procedure(par_line_search = "exact"))
+
+#%%
+'''Test on chebyquad ...'''

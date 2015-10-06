@@ -13,14 +13,12 @@ from abc import abstractmethod
 
 class OptimizationProblem:
     '''A class which generates the necessary components to handle and solve an
-    optimization problem defined by an input function f'''
+    optimization problem. It is defined by an input function f, a guess for the
+    x that minimizes f and optionally a function for the gradient'''
         
-    def __init__(self, f, g = None, x0 = None):
+    def __init__(self, f, x0, g = None):
         self.f = f
-        if x0 == None:
-            self.x0 = np.array([4,4])
-        else:
-            self.x0 = np.asarray(x0)
+        self.x0 = np.asarray(x0)
         if g == None:
             self.g = get_gradient(f)
         else:
@@ -114,8 +112,9 @@ class OriginalNewton(OptimizationMethods):
         return calc_hessian(g, xk)
 
 class OptimizationMethodsQuasi(OptimizationMethods):
-    ''' Class OptimizationMethodsQuasi inherits OptimizationMethods and merely consists 
-    of methods of computation of the Hessian and using different updates methods'''
+    ''' Class OptimizationMethodsQuasi inherits OptimizationMethods and merely 
+    consists of methods of computation of the Hessian and it enables different 
+    hessian update methods'''
 
     def __init__(self, OptimizationProblem, hessupdate = "broyden", tol = 1e-5):
         self.f = OptimizationProblem.f
@@ -129,7 +128,7 @@ class OptimizationMethodsQuasi(OptimizationMethods):
         elif hessupdate == "BFGS":
             self.update_H = BFGS
         
-    def _update_hessian(self, xk, xnew, g, G): # inparametern G är egentligen H
+    def _update_hessian(self, xk, xnew, g, G): # argument G is actually H
         delta = xnew - xk
         gamma = g(xnew) - g(xk)
         H =  self.update_H(G, delta, gamma)

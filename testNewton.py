@@ -9,13 +9,13 @@ from rosenbrock import *
 class TestEverything(unittest.TestCase):
     def setUp(self):
         function = rosenbrock
-        self.guess = [37,-34]
+        self.guess = [10,10]
         self.problem = OptimizationProblem(function, x0 = self.guess)
   
     def test_exact_line_search(self):
         f = lambda x: (x-8)**6
-        alpha = linesearch.exact_line_search(f)
-        self.assertAlmostEqual(alpha,8)
+        alpha = linesearch.exact_line_search(f,0)
+        self.assertAlmostEqual(alpha,8,4)
     
     '''def test_inexact_line_search(self):
         f = lambda x: (x-8)**6
@@ -46,6 +46,24 @@ class TestEverything(unittest.TestCase):
         xstar, fmin = solve.newton_procedure(par_line_search = "exact")
         self.assertAlmostEqual(xstar.all(),1 , 4)
         self.assertAlmostEqual(fmin , 0, 4)
+        xstar, fmin = solve.newton_procedure(par_line_search = "inexact")
+        self.assertAlmostEqual(xstar.all(),1 , 4)
+        self.assertAlmostEqual(fmin , 0, 4)
+        
+    def test_quasi_GB(self):
+        solve = OptimizationMethodsQuasi(self.problem, hessupdate = "GB")
+        '''xstar, fmin = solve.newton_procedure(par_line_search = "exact")
+        self.assertAlmostEqual(xstar.all(),1 , 4)
+        self.assertAlmostEqual(fmin , 0, 4)'''
+        xstar, fmin = solve.newton_procedure(par_line_search = "inexact")
+        self.assertAlmostEqual(xstar.all(),1 , 4)
+        self.assertAlmostEqual(fmin , 0, 4)
+        
+    def test_quasi_BB(self):
+        solve = OptimizationMethodsQuasi(self.problem, hessupdate = "BB")
+        '''xstar, fmin = solve.newton_procedure(par_line_search = "exact")
+        self.assertAlmostEqual(xstar.all(),1 , 4)
+        self.assertAlmostEqual(fmin , 0, 4)'''
         xstar, fmin = solve.newton_procedure(par_line_search = "inexact")
         self.assertAlmostEqual(xstar.all(),1 , 4)
         self.assertAlmostEqual(fmin , 0, 4)

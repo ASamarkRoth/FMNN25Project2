@@ -116,7 +116,7 @@ class OptimizationMethodsQuasi(OptimizationMethods):
     consists of methods of computation of the Hessian and it enables different 
     hessian update methods'''
 
-    def __init__(self, OptimizationProblem, hessupdate = "broyden", tol = 1e-5):
+    def __init__(self, OptimizationProblem, hessupdate = "BFGS", tol = 1e-5):
         self.f = OptimizationProblem.f
         self.x0 = OptimizationProblem.x0
         self.g = OptimizationProblem.g

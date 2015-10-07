@@ -1,9 +1,11 @@
 '''Set FMNN25Project2 as consoles working directory!!!'''
 
+import scipy.optimize as so
 from rosenbrock import *
 from optimizationNewton import *
 from linesearch import *
 import numpy as np
+import chebyquad as cq
 
 #%%
 '''Test with easy function'''
@@ -22,7 +24,7 @@ def c(alpha):
 
 
 
-prob = OptimizationProblem(a, np.array([7,11]), b)
+#prob = OptimizationProblem(a, np.array([7,11]), b)
 
 #solver = OriginalNewton(prob)
 #print("Linus testfunc")
@@ -35,15 +37,23 @@ prob = OptimizationProblem(a, np.array([7,11]), b)
 #%%
 '''Test rosenbrock'''
 
-prob2 = OptimizationProblem(rosenbrock, np.array([5,6]))
+#prob2 = OptimizationProblem(rosenbrock, np.array([5,6]))
 
 #solver = OriginalNewton(prob)
 
 #print("Rosenbrock test")
 #print(solver.newton_procedure(par_line_search= "exact"))
 
-solver = OptimizationMethodsQuasi(prob, "GB")
-print(solver.newton_procedure(par_line_search = "inexact"))
+#solver = OptimizationMethodsQuasi(prob, "BB")
+#print(solver.newton_procedure(par_line_search = "exact"))
 
 #%%
 '''Test on chebyquad ...'''
+x0 = np.linspace(0, 1, 11)
+print(cq.chebyquad(x0))
+print(cq.gradchebyquad(x0))
+prob3 = OptimizationProblem(cq.chebyquad, x0, cq.gradchebyquad)
+solver3 = OptimizationMethodsQuasi(prob3, 'BFGS')
+print(solver3.newton_procedure(par_line_search = 'inexact'))
+print('BLANK LINE!!')
+print(so.fmin_bfgs(cq.chebyquad, x0, cq.gradchebyquad))

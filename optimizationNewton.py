@@ -48,7 +48,7 @@ class OptimizationMethods(metaclass=ABCMeta):
             def f_linear_derivative(alpha):
                 return self.g(xk + alpha*sk).dot(sk)
             alphak = line_search(f_linear, f_linear_derivative, 0)
-            #print("xk =", xk, ", fk = ", self.f(xk), ", sk = ", sk, ", alpha_k = ", alphak)
+            print("xk =", xk, ", fk = ", self.f(xk), ", sk = ", sk, ", alpha_k = ", alphak)
             xnew = xk + alphak*sk
             Gk = self._update_hessian(xk, xnew, self.g, Gk)
             xk = xnew

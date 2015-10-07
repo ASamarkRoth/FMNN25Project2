@@ -22,9 +22,9 @@ def c(alpha):
 
 
 
-prob = OptimizationProblem(a, g = b, x0 = np.array([7,11]))
+prob = OptimizationProblem(a, np.array([7,11]), b)
 
-solver = OriginalNewton(prob)
+#solver = OriginalNewton(prob)
 #print("Linus testfunc")
 #print(solver.newton_procedure(par_line_search="None"))
 #print("test on a,b thing", solver.newton_procedure())
@@ -34,18 +34,16 @@ solver = OriginalNewton(prob)
 
 #%%
 '''Test rosenbrock'''
-f = rosenbrock
-g = rosenbrock_grad
 
-prob = OptimizationProblem(f, x0 = np.array([5,6]))
+prob2 = OptimizationProblem(rosenbrock, np.array([5,6]))
 
-solver = OriginalNewton(prob)
+#solver = OriginalNewton(prob)
 
 #print("Rosenbrock test")
 #print(solver.newton_procedure(par_line_search= "exact"))
 
-solver = OptimizationMethodsQuasi(prob, "broyden")
-print(solver.newton_procedure(par_line_search = "exact"))
+solver = OptimizationMethodsQuasi(prob, "GB")
+print(solver.newton_procedure(par_line_search = "inexact"))
 
 #%%
 '''Test on chebyquad ...'''

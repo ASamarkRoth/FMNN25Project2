@@ -121,8 +121,10 @@ class OptimizationMethodsQuasi(OptimizationMethods):
         self.x0 = OptimizationProblem.x0
         self.g = OptimizationProblem.g
         self.tol = tol
-        if hessupdate == "broyden":
-            self.update_H = broyden
+        if hessupdate == "BB":
+            self.update_H = bad_broyden
+        elif hessupdate == 'GB':
+            self.update_H = good_broyden
         elif hessupdate == "DFP":
             self.update_H = DFP
         elif hessupdate == "BFGS":
